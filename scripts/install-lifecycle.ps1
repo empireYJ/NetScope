@@ -1,5 +1,6 @@
 ﻿param([ValidateSet('Stop','Uninstall','RemoveTask')][string]$Mode='Stop')
 $ErrorActionPreference='Stop'
+$env:PSModulePath=(Join-Path $PSHOME 'Modules')+[IO.Path]::PathSeparator+$env:PSModulePath
 [Net.WebRequest]::DefaultWebProxy=$null
 $appRoot=[IO.Path]::GetFullPath((Split-Path -Parent $PSScriptRoot))
 $dataRoot=Join-Path $appRoot 'data'

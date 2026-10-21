@@ -39,7 +39,7 @@ try {
   $sensor=& (Join-Path $installRoot 'runtime\sensor\NetScope.Sensor.exe') --version | ConvertFrom-Json
   if($LASTEXITCODE -ne 0 -or $sensor.app -ne 'NetScope.Sensor'){throw 'Self-contained sensor failed to launch'}
   $checks.Add('Self-contained native sensor starts without a global .NET runtime')
-  $help=& $env:ComSpec /d /c ('call "'+(Join-Path $installRoot 'netscope.cmd')+'" help --json') | ConvertFrom-Json
+  $help=& (Join-Path $installRoot 'netscope.cmd') help --json | ConvertFrom-Json
   if($LASTEXITCODE -ne 0 -or $help.app -ne 'NetScope'){throw 'CLI launcher failed without a global Node installation'}
   $checks.Add('CLI launcher works from an installation path containing spaces without system Node')
   $dataRoot=Join-Path $installRoot 'data'

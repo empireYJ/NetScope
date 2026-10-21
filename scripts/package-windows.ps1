@@ -1,5 +1,8 @@
 ﻿param([string]$IsccPath,[switch]$SkipInstaller)
 $ErrorActionPreference='Stop'
+# A Windows PowerShell child can inherit PowerShell 7's module paths from CI.
+# Prefer the modules matching this host, especially Get-FileHash and Archive.
+$env:PSModulePath=(Join-Path $PSHOME 'Modules')+[IO.Path]::PathSeparator+$env:PSModulePath
 $appRoot=[IO.Path]::GetFullPath((Split-Path -Parent $PSScriptRoot))
 $cacheRoot=Join-Path $appRoot 'build-cache'
 $outputRoot=Join-Path $appRoot 'dist'
