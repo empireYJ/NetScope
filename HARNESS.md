@@ -2,6 +2,8 @@
 
 Root: your NetScope checkout or installation directory.
 
+Windows Release installers include `runtime/node/node.exe`; `netscope.cmd` automatically selects it. For stdio MCP use that executable with the absolute path to `mcp.mjs`; `mcp-config --json` reports the actual bundled executable when launched through this wrapper. Installing Node separately is only required for source development.
+
 Prefer `netscope.cmd` or `node --disable-warning=ExperimentalWarning cli.mjs`. All commands with `--json` write a single JSON object to stdout; `watch --json` writes NDJSON. Errors go to stderr as `{ok:false,error}`. Exit codes: 0 success, 1 failure, 2 invalid route. No stdin interaction for ordinary read/write commands. `system enable` may show a Windows UAC dialog.
 
 CLI `status`, `doctor`, `watch` and `report` default to compact output: dense chart points and full adapter inventory are omitted. Use `--full` when needed. This keeps repeated agent tool results small; use filtered queries and small `records --limit` values when examining details. The HTTP API always returns its full documented response.

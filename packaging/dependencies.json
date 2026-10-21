@@ -1,0 +1,14 @@
+{
+  "node": {
+    "version": "v22.23.4",
+    "url": "https://nodejs.org/dist/v22.23.4/node-v22.23.4-win-x64.zip",
+    "sha256": "cbc74b5e0982c9dbb41525fd8fb5dcd32fbee237863f7829072f4639a1ce5f20"
+  },
+  "dotnetRuntimeVersion": "9.0.21",
+  "webview": {
+    "url": "https://msedge.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/35871e19-d11b-432d-9d1e-7be0ff286540/MicrosoftEdgeWebView2RuntimeInstallerX64.exe",
+    "sha256": "0625fb5c1e75be58a164e14f95aa58a3e5badb859b3d17c952385f3e4a9ff3e8",
+    "publisher": "Microsoft Corporation",
+    "source": "https://developer.microsoft.com/en-us/microsoft-edge/webview2/"
+  }
+}

@@ -1,0 +1,18 @@
+墨流 NetScope · Windows x64
+
+安装包包含 Node.js、.NET 运行环境和 WebView2 离线安装程序，无需单独安装开发工具。
+如果没有 WebView2，安装程序会自动补齐 Microsoft 运行环境。
+
+默认安装到当前用户的 LocalAppData\Programs\NetScope，无需管理员权限。
+首次启用设置中的“Windows 增强采集”时才需要管理员确认。
+直连/VPN 分流依赖兼容的 Clash Verge Rev / Mihomo 配置；其他 VPN 不保证可识别。
+
+升级会安全关闭本安装目录中的 NetScope，然后保留历史账本和设置。
+卸载默认保留安装目录的 data 文件夹（历史和浏览器缓存），需要彻底删除时请自行备份后清理。
+卸载启用了增强采集的安装时，可能需要一次管理员确认来移除传感器计划任务。
+
+安装包目前没有商业代码签名证书，Windows 可能提示“未知发布者”。
+请仅从 https://github.com/empireYJ/NetScope/releases 下载，并核对 SHA256SUMS.txt。
+
+此软件只做本机流量观测和提醒，不会自动断网或结束其他联网任务。
+程序计数不等于 VPN 套餐账单，也不能解密请求正文。

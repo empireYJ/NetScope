@@ -17,7 +17,8 @@ if(-not $alive) {
   if(Test-Path -LiteralPath $desktopExe){
     $p=Start-Process -FilePath $desktopExe -ArgumentList '--background' -WorkingDirectory $appRoot -WindowStyle Hidden -PassThru
   }else{
-    $nodePath=(Get-Command node.exe -ErrorAction Stop).Source
+    $nodePath=Join-Path $appRoot 'runtime\node\node.exe'
+    if(-not(Test-Path -LiteralPath $nodePath)){$nodePath=(Get-Command node.exe -ErrorAction Stop).Source}
     $p=Start-Process -FilePath $nodePath -ArgumentList @('--disable-warning=ExperimentalWarning',('"'+(Join-Path $appRoot 'server.mjs')+'"')) -WorkingDirectory $appRoot -WindowStyle Hidden -PassThru -RedirectStandardOutput (Join-Path $dataRoot 'server.log') -RedirectStandardError (Join-Path $dataRoot 'server-error.log')
   }
   for($i=0;$i -lt 30;$i++){Start-Sleep -Milliseconds 200;try{$r=Invoke-RestMethod -Uri ($address+'/api/v1/status') -TimeoutSec 1;if($r.app -eq 'NetScope'){$alive=$true;break}}catch{}}

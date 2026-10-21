@@ -7,7 +7,15 @@ A local-first Windows desktop network observatory with direct/proxy traffic rank
 [![License: MIT](https://img.shields.io/badge/license-MIT-a3ff5b?style=flat-square)](LICENSE)
 [![Windows](https://img.shields.io/badge/platform-Windows-101a13?style=flat-square)](#从源码运行)
 
-NetScope 使用无边框黑绿界面、单边缺角卡片和可关闭的点阵流效果。网络账本与诊断数据保存在本机 SQLite 中。当前版本 **1.1.0**；目前提供源码构建，尚未提供签名安装包。
+NetScope 使用无边框黑绿界面、单边缺角卡片和可关闭的点阵流效果。网络账本与诊断数据保存在本机 SQLite 中。当前版本 **1.1.1**，提供 Windows x64 完整安装包及源码。
+
+## 下载安装
+
+前往 **[GitHub Releases](https://github.com/empireYJ/NetScope/releases/latest)**，下载 `NetScope-*-windows-x64-setup.exe`，双击安装。支持 Windows 10 1809 及更新版本 / Windows 11 的 x64 环境。
+
+安装包内置 Node.js 和自包含 .NET 运行环境，并附带 Microsoft WebView2 离线安装程序；缺少 WebView2 时自动安装。无需安装 Node、.NET SDK 或配置开发环境。默认安装到 `%LOCALAPPDATA%\Programs\NetScope`，提供开始菜单及可选桌面、登录自启动快捷方式。安装本身不要求管理员权限，首次启用 Windows 增强采集时另行请求 UAC。
+
+升级保留历史与设置；卸载默认保留安装目录下的 `data` 文件夹（包括账本和浏览器缓存）。若启用了增强采集，卸载可能需要 UAC 来移除其计划任务。安装包尚未配置商业代码签名，Windows 可能显示未知发布者或 SmartScreen 提示；请从本仓库下载，并核对发布页的 `SHA256SUMS.txt`。
 
 ## 能做什么
 
@@ -80,6 +88,12 @@ MCP 使用 `node mcp.mjs`，默认只开放读取；`--allow-control` 开放配�
 - 保留期限覆盖生产账本中的历史；手动导出、独立备份和 WebView 缓存需自行管理。代码仓库已忽略本地数据和构建目录。
 
 `NETSCOPE_DATA_DIR` 可指定独立数据目录；`NETSCOPE_OFFLINE=1` 只浏览历史、不启动采集器。桌面及系统启动脚本使用默认安装内的 `data/`，环境变量主要供后端开发和测试隔离使用。
+
+### 构建 Windows 安装包
+
+在 Windows 上准备 .NET 9 SDK、Node.js 和 Inno Setup 6.7+，执行 `npm run package:windows`。运行环境版本、下载地址和 SHA-256 固定在 `packaging/dependencies.json`；构建只复制明确列出的程序文件，不打包本机 `data/`。安装包、校验和及构建信息输出至忽略的 `dist/`。`-SkipInstaller` 可单独生成并验证自包含程序目录。
+
+维护者也可在 Actions 中运行 **Windows installer release**。该流程使用托管构建机中已有的 Inno Setup，完成真实安装、界面加载、原位升级和卸载检查后创建草稿 Release；验证报告随包提供。发布草稿前核对版本和构建结果。测试不人为启用管理员采集或替代所有干净 Windows 版本的兼容性验证。
 
 ## 开发与贡献
 

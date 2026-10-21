@@ -71,7 +71,8 @@ class MainWindow:BorderlessWindow {
         // Some local networking stacks reject individual fresh sockets. A live
         // process from our own startup descriptor must not be duplicated either.
         try {using var descriptor=JsonDocument.Parse(File.ReadAllText(Path.Combine(Data,"server.json")));int pid=descriptor.RootElement.GetProperty("pid").GetInt32();var running=Process.GetProcessById(pid);var started=descriptor.RootElement.GetProperty("startedAt").GetDateTimeOffset();if(!running.HasExited&&string.Equals(running.ProcessName,"node",StringComparison.OrdinalIgnoreCase)&&Math.Abs((running.StartTime.ToUniversalTime()-started.UtcDateTime).TotalSeconds)<10)return false;}catch{}
-        var node=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),"nodejs","node.exe");
+        var bundledNode=Path.Combine(root,"runtime","node","node.exe");
+        var node=File.Exists(bundledNode)?bundledNode:Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),"nodejs","node.exe");
         var start=new ProcessStartInfo(File.Exists(node)?node:"node.exe"){UseShellExecute=false,CreateNoWindow=true,WorkingDirectory=root,RedirectStandardError=true,RedirectStandardOutput=true};
         start.ArgumentList.Add("--disable-warning=ExperimentalWarning");start.ArgumentList.Add(Path.Combine(root,"server.mjs"));
         var child=Process.Start(start);

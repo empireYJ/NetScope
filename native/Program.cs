@@ -107,6 +107,7 @@ class Program
         Task.Run(()=> {try { Session.Source.Process(); } catch(Exception e) {Emit(new {type="error",message=e.Message});} });
     }
     static int Main(string[] args) {
+        if(args.Contains("--version")){Console.WriteLine(JsonSerializer.Serialize(new {app="NetScope.Sensor",version=typeof(Program).Assembly.GetName().Version?.ToString()}));return 0;}
         var pipeArg=Array.IndexOf(args,"--pipe");
         NamedPipeClientStream? pipe=null;
         if(pipeArg>=0) {
