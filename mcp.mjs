@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import readline from 'node:readline';
-import {DATA,readConfig} from './lib/config.mjs';
+import {DATA,VERSION,readConfig} from './lib/config.mjs';
 
 const allowControl=process.argv.includes('--allow-control'),allowProbes=process.argv.includes('--allow-probes');
 const range={range:{type:'string',enum:['all','1h','24h','7d','30d']},from:{type:'string'},to:{type:'string'},route:{type:'string',enum:['DIRECT','PROXY','UNKNOWN','TRANSPORT','ALL']},key:{type:'string'},search:{type:'string'}};
@@ -43,7 +43,7 @@ lines.on('line',line=>{queue=queue.then(async()=>{
   if(message.jsonrpc!=='2.0'||typeof message.method!=='string'){send({jsonrpc:'2.0',id,error:{code:-32600,message:'Invalid request'}});return;}
   try {
     let result;
-    if(message.method==='initialize'){const requested=message.params?.protocolVersion;result={protocolVersion:['2024-11-05','2025-03-26','2025-06-18','2025-11-25'].includes(requested)?requested:'2025-06-18',capabilities:{tools:{listChanged:false}},serverInfo:{name:'netscope-local',version:'1.1.0'},instructions:'只使用实际保留的数据。未知、估算和缺口必须明确指出。内部转发、应用计数和 AI 请求正文不可相加。默认不启用控制或主动探测。'};}
+    if(message.method==='initialize'){const requested=message.params?.protocolVersion;result={protocolVersion:['2024-11-05','2025-03-26','2025-06-18','2025-11-25'].includes(requested)?requested:'2025-06-18',capabilities:{tools:{listChanged:false}},serverInfo:{name:'netscope-local',version:VERSION},instructions:'只使用实际保留的数据。未知、估算和缺口必须明确指出。内部转发、应用计数和 AI 请求正文不可相加。默认不启用控制或主动探测。'};}
     else if(message.method==='ping')result={};
     else if(message.method==='tools/list')result={tools:tools.map(({endpoint,method,...t})=>t)};
     else if(message.method==='tools/call'){const tool=tools.find(t=>t.name===message.params?.name);if(!tool){send({jsonrpc:'2.0',id,error:{code:-32602,message:'Unknown or disabled tool'}});return;}try{result=await call(tool,message.params.arguments||{});}catch(e){result={content:[{type:'text',text:e.message==='fetch failed'?'NetScope 本地服务暂未连接。':e.message}],isError:true};}}

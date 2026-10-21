@@ -10,7 +10,7 @@ import {Insights} from './lib/insights.mjs';
 import {AiDiagnostics} from './lib/ai.mjs';
 import {NetworkDiagnostics} from './lib/diagnostics.mjs';
 import {diagnosticBundle} from './lib/bundle.mjs';
-import {ROOT,DATA,readConfig,saveConfig,validateConfig,atomicJSON} from './lib/config.mjs';
+import {ROOT,DATA,VERSION,readConfig,saveConfig,validateConfig,atomicJSON} from './lib/config.mjs';
 import {autoStart,autoStartEnabled,enableSystem,resumeSystem} from './lib/platform.mjs';
 
 fs.mkdirSync(DATA,{recursive:true});
@@ -24,7 +24,7 @@ const token=fs.existsSync(tokenPath)?fs.readFileSync(tokenPath,'utf8').trim():cr
 if(!fs.existsSync(tokenPath))fs.writeFileSync(tokenPath,token,{mode:0o600});
 const origin=`http://127.0.0.1:${config.port}`;
 const allowedHosts=new Set([`127.0.0.1:${config.port}`,`localhost:${config.port}`]);
-function status() {return {app:'NetScope',version:'1.1.0',apiVersion:1,pid:process.pid,url:origin,startedAt,offline,now:Date.now(),...collector.snapshot(),alert:latestAlert,ruleAlerts,storage:store.storage(),settings:{...config,autoStart:autoStartEnabled()},recordingSince:store.getMeta('recording_since')};}
+function status() {return {app:'NetScope',version:VERSION,apiVersion:1,pid:process.pid,url:origin,startedAt,offline,now:Date.now(),...collector.snapshot(),alert:latestAlert,ruleAlerts,storage:store.storage(),settings:{...config,autoStart:autoStartEnabled()},recordingSince:store.getMeta('recording_since')};}
 function json(res,value,code=200) {res.writeHead(code,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'});res.end(JSON.stringify(value));}
 function authorized(req) {const received=req.headers['x-netscope-key'];return typeof received==='string'&&received.length===token.length&&crypto.timingSafeEqual(Buffer.from(received),Buffer.from(token));}
 async function bodyOf(req,maxBytes=16384) {let size=0;const chunks=[];for await(const chunk of req){size+=chunk.length;if(size>maxBytes)throw new Error('Request too large');chunks.push(chunk);}return JSON.parse(Buffer.concat(chunks).toString()||'{}');}

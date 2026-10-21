@@ -9,6 +9,7 @@ import {fileURLToPath} from 'node:url';
 import {Store,minuteOf} from '../lib/store.mjs';
 import {measureRequest} from '../lib/ai-recorder.mjs';
 const root=fileURLToPath(new URL('..',import.meta.url));
+const expectedVersion=JSON.parse(fs.readFileSync(path.join(root,'package.json'),'utf8')).version;
 const pause=ms=>new Promise(r=>setTimeout(r,ms));
 async function mcp(messages,env,flags=[]) {
  const child=spawn(process.execPath,[path.join(root,'mcp.mjs'),...flags],{env:{...process.env,...env},windowsHide:true});let out='',err='';
@@ -17,7 +18,7 @@ async function mcp(messages,env,flags=[]) {
 }
 test('stdio MCP negotiates, defaults to read-only and validates arguments without extra stdout',async()=>{
  const rows=await mcp([{jsonrpc:'2.0',id:1,method:'initialize',params:{protocolVersion:'2025-06-18'}},{jsonrpc:'2.0',method:'notifications/initialized'},{jsonrpc:'2.0',id:2,method:'tools/list'},{jsonrpc:'2.0',id:3,method:'tools/call',params:{name:'netscope_control',arguments:{action:'pause'}}},'not-json'],{});
- assert.equal(rows.length,4);assert.equal(rows[0].result.protocolVersion,'2025-06-18');assert.equal(rows[1].result.tools.length,13);assert.ok(rows[1].result.tools.every(t=>t.annotations.readOnlyHint));assert.equal(rows[2].error.code,-32602);assert.equal(rows[3].error.code,-32700);
+ assert.equal(rows[0].result.serverInfo.version,expectedVersion);assert.equal(rows.length,4);assert.equal(rows[0].result.protocolVersion,'2025-06-18');assert.equal(rows[1].result.tools.length,13);assert.ok(rows[1].result.tools.every(t=>t.annotations.readOnlyHint));assert.equal(rows[2].error.code,-32602);assert.equal(rows[3].error.code,-32700);
 });
 test('isolated HTTP routes, mutations, export and real MCP calls share the same evidence',async()=>{
  const temporary=fs.mkdtempSync(path.join(os.tmpdir(),'netscope-api-'));
@@ -31,6 +32,7 @@ test('isolated HTTP routes, mutations, export and real MCP calls share the same 
  const call=async(endpoint,body,method='POST',authorized=true)=>{const opts=body===undefined?{}:{method,headers:{'Content-Type':'application/json',...(authorized?{'X-NetScope-Key':token}:{})},body:JSON.stringify(body)};const response=await fetch(base+endpoint,opts);return {status:response.status,value:await response.json()};};
  try {
   let ready=false;for(let i=0;i<60;i++){try{const r=await call('session');if(r.status===200){token=r.value.token;ready=true;break;}}catch{}await pause(50);}assert.ok(ready,errors);
+  assert.equal((await call('status')).value.version,expectedVersion);
   const peak=(await call('peaks')).value.rows[0];assert.equal(peak.uploadBytes,12345);
   assert.equal((await call('replay?at='+at)).value.flows[0].name,'dev.exe');
   const routes=(await call('routes')).value;assert.equal(routes.rows[0].rule,'DomainSuffix');
