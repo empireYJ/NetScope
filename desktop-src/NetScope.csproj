@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>WinExe</OutputType><TargetFramework>net9.0-windows</TargetFramework><UseWindowsForms>true</UseWindowsForms><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable><AssemblyName>NetScope</AssemblyName><Version>1.1.0</Version><AssemblyVersion>1.1.0.0</AssemblyVersion><FileVersion>1.1.0.0</FileVersion><ApplicationIcon>../public/app.ico</ApplicationIcon></PropertyGroup>
+  <ItemGroup><PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4258.31"/></ItemGroup>
+  <Target Name="ExcludeUnusedWpf" BeforeTargets="ResolveAssemblyReferences" AfterTargets="ResolvePackageAssets">
+    <ItemGroup><Reference Remove="@(Reference)" Condition="$([System.String]::Copy('%(Reference.Identity)').Contains('Microsoft.Web.WebView2.Wpf'))" /></ItemGroup>
+  </Target>
+</Project>
