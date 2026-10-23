@@ -7,7 +7,7 @@ A local-first Windows desktop network observatory with direct/proxy traffic rank
 [![License: MIT](https://img.shields.io/badge/license-MIT-a3ff5b?style=flat-square)](LICENSE)
 [![Windows](https://img.shields.io/badge/platform-Windows-101a13?style=flat-square)](#从源码运行)
 
-NetScope 使用无边框黑绿界面、单边缺角卡片和可关闭的点阵流效果。网络账本与诊断数据保存在本机 SQLite 中。当前版本 **1.1.1**，提供 Windows x64 完整安装包及源码。
+NetScope 使用无边框黑绿界面、单边缺角卡片和可关闭的点阵流效果。网络账本与诊断数据保存在本机 SQLite 中。当前版本 **1.1.2**，提供 Windows x64 完整安装包及源码。
 
 ## 下载安装
 

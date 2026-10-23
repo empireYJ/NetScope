@@ -3,7 +3,7 @@ native/bin/
 native/obj/
 runtime/
 qa-output/
-desktop/
+/desktop/
 desktop-staging/
 node_modules/
 *.sqlite*
@@ -11,6 +11,8 @@ node_modules/
 *.dmp
 desktop-src/bin/
 desktop-src/obj/
+test/desktop/bin/
+test/desktop/obj/
 .playwright-cli/
 *.log
 

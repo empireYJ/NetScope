@@ -37,7 +37,7 @@ class MainWindow:BorderlessWindow {
         try{using var cfg=JsonDocument.Parse(File.ReadAllText(Path.Combine(Data,"settings.json")));address="http://127.0.0.1:"+cfg.RootElement.GetProperty("port").GetInt32();}catch{}
         var ico=Path.Combine(root,"public","app.ico");if(File.Exists(ico))Icon=new Icon(ico);
         ContentHost.Controls.Add(loading);
-        var menu=new ContextMenuStrip {BackColor=Color.FromArgb(18,29,19),ForeColor=Color.FromArgb(217,237,203)};
+        var menu=new TrayMenu();
         menu.Items.Add("打开墨流",null,async(_,_)=>await ShowWindow());
         menu.Items.Add("暂停采集",null,async(_,_)=>await Control("pause"));
         menu.Items.Add("恢复采集",null,async(_,_)=>await Control("resume"));
@@ -51,7 +51,7 @@ class MainWindow:BorderlessWindow {
         timer.Tick+=async(_,_)=>await Tick();
         Shown+=async(_,_)=>{await Tick();if(!initialBackground)await LoadView();};
         Load+=(_,_)=>{int dark=1;DwmSetWindowAttribute(Handle,20,ref dark,4);int rectangular=1;DwmSetWindowAttribute(Handle,33,ref rectangular,4);};
-        FormClosing+=(_,e)=>{if(!exiting&&e.CloseReason==CloseReason.UserClosing){e.Cancel=true;BeginInvoke(new Action(async()=>await ExitApplication()));}else{exiting=true;timer.Stop();tray.Visible=false;view?.Dispose();tray.Dispose();}};
+        FormClosing+=(_,e)=>{if(!exiting&&e.CloseReason==CloseReason.UserClosing){e.Cancel=true;BeginInvoke(new Action(async()=>await ExitApplication()));}else{exiting=true;timer.Stop();tray.Visible=false;view?.Dispose();tray.Dispose();menu.Dispose();}};
         _=Listen();timer.Start();
     }
     protected override void SetVisibleCore(bool value) {if(initialBackground&&!IsHandleCreated){CreateHandle();value=false;_ = Tick();}base.SetVisibleCore(value);}

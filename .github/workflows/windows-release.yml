@@ -19,8 +19,13 @@ jobs:
           dotnet-version: '9.0.x'
       - name: Accounting, API and MCP regression tests
         run: npm test
+      - name: Native tray rendering and text layout regression tests
+        run: npm run test:desktop
       - name: Build verified self-contained payload and offline installer
         run: npm run package:windows
+      - name: Include native menu verification report
+        shell: pwsh
+        run: Copy-Item qa-output/tray-menu/report.json dist/tray-menu-verification.json
       - name: Install, render, upgrade and uninstall without system runtimes
         shell: pwsh
         run: |
